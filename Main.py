@@ -8,7 +8,7 @@ from playsound import playsound
 
 
 #Lên trang Gemini API, tạo API key (free)
-os.environ["API_KEY"] = "API KEY GEMINI HERE" #Điền API trong ""
+os.environ["API_KEY"] =  "API KEY GEMINI HERE" #Điền API trong ""
 genai.configure(api_key=os.environ["API_KEY"])
 
 # Điều chỉnh độ ngu học của AI
@@ -112,12 +112,15 @@ def speech_to_text():
             # Sử dụng Google Web Speech API để nhận diện giọng nói
             text = recognizer.recognize_google(audio, language="en-US")
             print("Client: ", text)
+            return text  # Return recognized text
         except sr.UnknownValueError:
-            print("Sorry, I could not understand the audio.")
+            print("Sorry, I could not understand the audio. Please speak again.")
+            return None  # Return None if speech is not understood
         except sr.RequestError:
             print("Sorry, there was an issue with the Google API.")
-    
-    return text if 'text' in locals() else None
+            return None  # Return None if there is a request error
+
+
 
 #Check kết thúc chương trình
 def Close_Program(text):
@@ -133,10 +136,14 @@ text_to_speech("Glad to see you again, boss, how may I help you today?")
 
 while True: 
     user_input = speech_to_text()  
+    
+    if user_input is None:  # Check if user_input is None
+        text_to_speech("Sorry, I could not understand the audio. Please speak again.")
+        continue  # Skip the rest of the loop and listen again
+    
     Chat.send_message(user_input)
     print(Chat.last.text)
     text_to_speech(Chat.last.text)
+    
     if Close_Program(user_input):
         break
-
-
