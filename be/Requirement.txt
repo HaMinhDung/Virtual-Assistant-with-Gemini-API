@@ -1,6 +1,9 @@
+Flask
+flask-cors
+werkzeug
 google-generativeai
 gtts
-playsound==1.2.2
+playsound
 speechrecognition
-PyAudio
-Flask
+PyPDF2
+python-docx
